@@ -102,14 +102,6 @@ body.dark-mode {
     color: #3498db;
 }
 
-.link.dark-mode {
-    color: #3498db; /* ダークモード時の href 色 */
-}
-
-.link a.dark-mode {
-    color: #3498db; /* ダークモード時の <a> タグの href 色 */
-}
-
 .dark-mode-toggle {
     position: absolute;
     top: 20px;
