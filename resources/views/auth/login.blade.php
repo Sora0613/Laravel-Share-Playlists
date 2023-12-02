@@ -11,14 +11,27 @@
 <div class="container">
     <div class="form-container">
         <h2>Login</h2>
-        <form action="#" method="post">
+        <form action="{{ route('login') }}" method="post">
+            @csrf
             <div class="form-group">
-                <label for="login-username">Username:</label>
-                <input type="text" id="login-username" name="login-username" required>
+                <label for="email">Email:</label>
+                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
+
+                @if ($errors->has('email'))
+                    <span class="invalid-feedback">
+                        <strong>{{ $errors->first('email') }}</strong>
+                    </span>
+                @endif
             </div>
             <div class="form-group">
-                <label for="login-password">Password:</label>
-                <input type="password" id="login-password" name="login-password" required>
+                <label for="password">Password:</label>
+                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+
+                @if ($errors->has('password'))
+                    <span class="invalid-feedback">
+                        <strong>{{ $errors->first('password') }}</strong>
+                    </span>
+                @endif
             </div>
             <div class="form-group">
                 <button type="submit" class="neumorphism">Login</button>
