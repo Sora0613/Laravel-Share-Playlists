@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Crypt;
 
 class User extends Authenticatable
 {
@@ -21,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'spotify_access_token'
     ];
 
     /**
@@ -31,6 +33,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'spotify_access_token',
     ];
 
     /**
@@ -42,4 +45,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function setSpotifyAccessTokenAttribute($value)
+    {
+        $this->attributes['spotify_access_token'] = Crypt::encrypt($value);
+    }
+
+    // Spotifyアクセストークンを復号化して取得
+    public function getSpotifyAccessTokenAttribute($value)
+    {
+        return $value ? Crypt::decrypt($value) : null;
+    }
+
 }
