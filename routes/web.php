@@ -27,3 +27,7 @@ Route::get('/index', [App\Http\Controllers\PlaylistsController::class, 'index'])
 Route::get('/search', [App\Http\Controllers\PlaylistsController::class, 'search'])->name('search');
 
 Route::post('/search', [App\Http\Controllers\PlaylistsController::class, 'search'])->name('search.do');
+
+Route::get('/spotify/auth', [App\Http\Controllers\PlaylistsController::class, 'spotify_auth'])->name('spotify.auth');
+
+Route::get('/spotify/callback', [App\Http\Controllers\PlaylistsController::class, 'spotify_callback'])->name('spotify.callback');
