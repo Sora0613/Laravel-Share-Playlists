@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
 class PlaylistsController extends Controller
@@ -16,35 +18,39 @@ class PlaylistsController extends Controller
     {
         if ($request->has('songs-keywords')) {
             $keyword = $request->input('songs-keywords');
-
-            $api_endpoint = "https://itunes.apple.com/search";
-            $term = $keyword;
-            $params = [
-                'term' => $term,
-                'country' => 'JP', // 検索対象の国を指定
-                'media' => 'music', // 検索対象のメディア種別を指定 (allはすべて)
-                'entity' => 'song', // 検索対象の種別を指定 (allはすべて)
-            ];
-
-            $query_string = http_build_query($params);
-            $request_url = "{$api_endpoint}?{$query_string}";
-
-            $response = file_get_contents($request_url);
-
-            if ($response !== false) {
-                $data = json_decode($response, true);
-
-                $songs = $data['results'];
-            }
+            $songs = $this->searchMusicFromItunes($keyword);
 
             return view('playlists.search', [
                 'songs' => $songs,
             ]);
-
         }
 
         return view('playlists.search');
 
+    }
+
+    private function searchMusicFromItunes($keyword){
+        $api_endpoint = "https://itunes.apple.com/search";
+        $term = $keyword;
+        $params = [
+            'term' => $term,
+            'country' => 'JP', // 検索対象の国を指定
+            'media' => 'music', // 検索対象のメディア種別を指定 (allはすべて)
+            'entity' => 'song', // 検索対象の種別を指定 (allはすべて)
+        ];
+
+        $query_string = http_build_query($params);
+        $request_url = "{$api_endpoint}?{$query_string}";
+
+        $response = file_get_contents($request_url);
+
+        if ($response !== false) {
+            $data = json_decode($response, true);
+
+            return $data['results']; //songsの配列を返す
+        }
+
+        return [];
     }
 
     //* --- Spotify API処理 --- *//
@@ -115,24 +121,30 @@ class PlaylistsController extends Controller
                 $refresh_token = $token_data['refresh_token'];
                 $expires_in = $token_data['expires_in'];
 
-                return view('playlists.spotify_callback', [
+                User::where('id',Auth::id())->update([
+                    'spotify_access_token' => $access_token,
+                ]);
+
+                return view('playlists.index');
+
+                /*return view('playlists.spotify_callback', [
                     'access_token' => $access_token,
                     'refresh_token' => $refresh_token,
                     'expires_in' => $expires_in,
-                ]);
+                ]);*/
 
-            } else {
-                $message = "アクセストークンの取得に失敗しました。\n";
-                return view('playlists.spotify_callback', [
-                    'message' => $message,
-                ]);
             }
-        } else {
-            $message = "stateが一致しませんでした。\n";
+
+            $message = "アクセストークンの取得に失敗しました。\n";
             return view('playlists.spotify_callback', [
                 'message' => $message,
             ]);
         }
+
+        $message = "stateが存在しませんでした。\n";
+        return view('playlists.spotify_callback', [
+            'message' => $message,
+        ]);
     }
 }
 
