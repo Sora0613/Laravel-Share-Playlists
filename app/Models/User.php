@@ -44,17 +44,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'spotify_access_token' => 'encrypted',
     ];
-
-    public function setSpotifyAccessTokenAttribute($value)
-    {
-        $this->attributes['spotify_access_token'] = Crypt::encrypt($value);
-    }
-
-    // Spotifyアクセストークンを復号化して取得
-    public function getSpotifyAccessTokenAttribute($value)
-    {
-        return $value ? Crypt::decrypt($value) : null;
-    }
-
 }
