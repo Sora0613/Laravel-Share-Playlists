@@ -20,12 +20,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\PlaylistsController::class, 'index'])->name('index');
+Route::get('/home', [App\Http\Controllers\PlaylistsController::class, 'index'])->name('index'); //表示
 
-Route::get('/search', [App\Http\Controllers\PlaylistsController::class, 'search'])->name('search');
+Route::get('/search', [App\Http\Controllers\PlaylistsController::class, 'search'])->name('search'); //表示
 
 Route::post('/search', [App\Http\Controllers\PlaylistsController::class, 'search'])->name('search.do');
 
-Route::get('/spotify/auth', [App\Http\Controllers\PlaylistsController::class, 'spotify_auth'])->name('spotify.auth');
+Route::get('/spotify/auth', [App\Http\Controllers\PlaylistsController::class, 'spotify_auth'])->name('spotify.auth'); //表示
 
 Route::get('/spotify/callback', [App\Http\Controllers\PlaylistsController::class, 'spotify_callback'])->name('spotify.callback');
