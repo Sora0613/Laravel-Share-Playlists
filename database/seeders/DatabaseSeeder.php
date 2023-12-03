@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        User::truncate();
         User::factory(10)->create();
 
         // \App\Models\User::factory()->create([
