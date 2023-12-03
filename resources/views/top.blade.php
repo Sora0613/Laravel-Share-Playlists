@@ -16,7 +16,7 @@
     <div class="cta-buttons">
         @if (Route::has('login'))
             @auth
-                <a href="{{ route('/home') }}" class="neumorphism">Home</a>
+                <a href="{{ route('index') }}" class="neumorphism">Home</a>
             @else
                 <a href="{{ route('login') }}" class="neumorphism">Login</a>
                 @if (Route::has('register'))
