@@ -111,7 +111,7 @@
 
     <form id="song-form" action="{{ route('search.do') }}" method="GET">
         @csrf
-        <label for="songs-keywords">Keywords:</label>
+        <label for="songs-keywords">Keyword:</label>
         <input type="text" id="songs-keywords" name="songs-keywords" required>
 
         <button type="submit">Search Songs</button>

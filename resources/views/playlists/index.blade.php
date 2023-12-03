@@ -9,6 +9,20 @@
 <div class="container">
     <header>
         <h1>Login後のトップページの予定。</h1>
+        <br>
+        <a href="{{ route('search') }}">音楽検索 from iTunes</a>
+        <br>
+        @if(Auth::user()->spotify_access_token === null)
+            <a href="{{ route('spotify.auth') }}">Spotifyでログイン</a>
+        @else
+            <a href="{{ route('spotify.make.playlists') }}">プレイリストのURLを読み込む</a>
+        @endif
+        <br>
+        <a href="{{ route('logout') }}"
+           onclick="event.preventDefault();
+           document.getElementById('logout-form').submit();">
+            {{ __('Logout') }}
+        </a>
     </header>
 </div>
 </body>
