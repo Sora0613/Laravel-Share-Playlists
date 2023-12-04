@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
@@ -123,9 +124,12 @@ class PlaylistsController extends Controller
 
                 User::where('id',Auth::id())->update([
                     'spotify_access_token' => $access_token,
+                    'spotify_refresh_token' => $refresh_token,
+                    'spotify_expires_at' => Carbon::now()->addSeconds($expires_in),
+                    'spotify_login' => true,
                 ]);
 
-                return view('playlists.index');
+                return redirect('/home');
 
                 /*return view('playlists.spotify_callback', [
                     'access_token' => $access_token,
@@ -145,6 +149,83 @@ class PlaylistsController extends Controller
         return view('playlists.spotify_callback', [
             'message' => $message,
         ]);
+    }
+
+    public function spotify_create(Request $request)
+    {
+        if($request->has('playlist-url')) {
+            $user = User::where('id', Auth::id())->first();
+
+            $playlist_url = $request->input('playlist-url');
+            $access_token = $user->spotify_access_token;
+            $expiresAt = $user->spotify_access_token_expires_at;
+
+            $playlist_id = $this->getPlaylistId($playlist_url);
+
+            if(Carbon::now()->gte($expiresAt)){
+                list($access_token, $expiresIn) = $this->refreshAccessToken($user->spotify_refresh_token);
+                $user->spotify_access_token = $access_token;
+                $user->spotify_access_token_expires_at = Carbon::now()->addSeconds($expiresIn);
+            }
+
+            if (isset($playlist_id)) {
+
+                $api_url = "https://api.spotify.com/v1/playlists/{$playlist_id}/tracks";
+
+                // ヘッダー設定
+                $headers = [
+                    'Authorization: Bearer ' . $access_token,
+                    'Content-Type: application/json',
+                ];
+
+                // APIリクエスト
+                $options = [
+                    'http' => [
+                        'header' => $headers,
+                        'method' => 'GET',
+                    ],
+                ];
+
+                $context = stream_context_create($options);
+                $response = file_get_contents($api_url, false, $context);
+
+                if ($response !== false) {
+                    $json = $response;
+                    $track_data = json_decode($json, true);
+
+                    return view('playlists.spotify_create', [
+                        'access_token' => $access_token,
+                        'user' => $user,
+                        'track_data' => $track_data,
+                    ]);
+                }
+            }
+        }
+        return view('playlists.spotify_create');
+    }
+
+    private function getPlaylistId($playlist_url){
+        preg_match('/playlist\/([a-zA-Z0-9]+)/', $playlist_url, $result);
+        if(isset($result[1])){
+            return $result[1];
+        }
+        return null;
+    }
+
+    private function refreshAccessToken($refreshToken){
+            // アクセストークンが有効期限切れの場合はリフレッシュトークンを使用して新しいアクセストークンを取得
+            $response = Http::asForm()->post('https://accounts.spotify.com/api/token', [
+                'grant_type' => 'refresh_token',
+                'refresh_token' => $refreshToken,
+                'client_id' => 'YOUR_CLIENT_ID',
+                'client_secret' => 'YOUR_CLIENT_SECRET',
+            ]);
+
+            // 新しいアクセストークンと有効期限を取得
+            $newAccessToken = $response->json('access_token');
+            $expiresIn = $response->json('expires_in');
+
+            return [$newAccessToken, $expiresIn];
     }
 }
 
