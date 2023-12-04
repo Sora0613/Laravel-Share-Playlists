@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('spotify_access_token')->unique()->nullable()->comment('Spotifyアクセストークン');
+            $table->string('spotify_access_token')->unique()->nullable();
+            $table->string('spotify_refresh_token')->unique()->nullable();
+            $table->date('spotify_expires_at')->nullable();
+            $table->boolean('spotify_login')->default(false)->comment('Spotifyにログインしているか');
             $table->rememberToken();
             $table->timestamps();
         });
