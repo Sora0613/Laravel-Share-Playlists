@@ -12,16 +12,19 @@
         <br>
         <a href="{{ route('search') }}">音楽検索 from iTunes</a>
         <br>
-        @if(Auth::user()->spotify_access_token === null)
-            <a href="{{ route('spotify.auth') }}">Spotifyでログイン</a>
+        @if(Auth::user()->spotify_login === 1)
+            <a href="{{ route('spotify.create') }}">プレイリストのURLを読み込む</a>
         @else
-            <a href="{{ route('spotify.make.playlists') }}">プレイリストのURLを読み込む</a>
+            <a href="{{ route('spotify.auth') }}">Spotifyでログイン</a>
         @endif
         <br>
         <a href="{{ route('logout') }}"
            onclick="event.preventDefault();
-           document.getElementById('logout-form').submit();">
+                   document.getElementById('logout-form').submit();">
             {{ __('Logout') }}
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
         </a>
     </header>
 </div>
