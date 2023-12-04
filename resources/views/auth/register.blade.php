@@ -34,18 +34,17 @@
                 @endif
             </div>
             <div class="form-group">
-                <label for="register-password">Password:</label>
-                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-
-                @if ($errors->has('password'))
-                    <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('password') }}</strong>
+                <label for="password">{{ __('Password') }}</label>
+                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                @error('password')
+                <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
                                     </span>
-                @endif
+                @enderror
             </div>
             <div class="form-group">
-                <label for="confirm-password">Confirm Password:</label>
-                <input type="password" id="password-confirm" name="password-confirm" required>
+                <label for="password-confirm">{{ __('Confirm Password') }}</label>
+                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
             </div>
             <div class="form-group">
                 <button type="submit" class="neumorphism">Register</button>
