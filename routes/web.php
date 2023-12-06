@@ -24,16 +24,16 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/home', [App\Http\Controllers\PlaylistsController::class, 'index'])->name('index'); //表示
 
-    Route::get('/search', [App\Http\Controllers\PlaylistsController::class, 'search'])->name('search'); //表示
+    Route::get('/search', [App\Http\Controllers\AppleController::class, 'search'])->name('search'); //表示
 
-    Route::post('/search', [App\Http\Controllers\PlaylistsController::class, 'search'])->name('search.do');
+    Route::post('/search', [App\Http\Controllers\AppleController::class, 'search'])->name('search.do');
 
-    Route::get('/spotify/auth', [App\Http\Controllers\PlaylistsController::class, 'spotify_auth'])->name('spotify.auth'); //表示
+    Route::get('/spotify/auth', [App\Http\Controllers\SpotifyController::class, 'spotify_auth'])->name('spotify.auth'); //表示
 
-    Route::get('/spotify/callback', [App\Http\Controllers\PlaylistsController::class, 'spotify_callback'])->name('spotify.callback');
+    Route::get('/spotify/callback', [App\Http\Controllers\SpotifyController::class, 'spotify_callback'])->name('spotify.callback');
 
-    Route::get('/spotify/create/', [App\Http\Controllers\PlaylistsController::class, 'spotify_create'])->name('spotify.create'); //表示
+    Route::get('/spotify/create/', [App\Http\Controllers\SpotifyController::class, 'spotify_create'])->name('spotify.create'); //表示
 
-    Route::post('/spotify/create/', [App\Http\Controllers\PlaylistsController::class, 'spotify_create'])->name('spotify.playlist.create');
+    Route::post('/spotify/create/', [App\Http\Controllers\SpotifyController::class, 'spotify_create'])->name('spotify.playlist.create');
 
 });
