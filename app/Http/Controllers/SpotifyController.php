@@ -13,7 +13,7 @@ use App\Facades\MusicService;
 class SpotifyController extends Controller
 {
     /* Spotify APIから楽曲を検索する */
-    public function spotify_create(Request $request)
+    public function spotify_search(Request $request)
     {
         if($request->has('playlist-url')) {
             $user = User::where('id', Auth::id())->first();
@@ -58,7 +58,7 @@ class SpotifyController extends Controller
                     // Parse the response body as JSON
                     $track_data = json_decode($response->getBody(), true);
 
-                    return view('spotify.spotify_create', [
+                    return view('spotify.spotify_search', [
                         'track_data' => $track_data,
                     ]);
                 } catch (GuzzleException $e) {
@@ -66,7 +66,7 @@ class SpotifyController extends Controller
                 }
             }
         }
-        return view('spotify.spotify_create');
+        return view('spotify.spotify_search');
     }
 
     /* SpotifyのAPIに関する認証処理 ここから */

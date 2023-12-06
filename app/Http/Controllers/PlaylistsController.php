@@ -18,4 +18,6 @@ class PlaylistsController extends Controller
     {
         return view('playlists.index');
     }
+
+
 }
