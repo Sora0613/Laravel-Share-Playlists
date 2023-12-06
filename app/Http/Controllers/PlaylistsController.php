@@ -41,6 +41,6 @@ class PlaylistsController extends Controller
         ]);
 
 
-        return back()->with('message', 'プレイリストを作成しました。');
+        return back();
     }
 }
