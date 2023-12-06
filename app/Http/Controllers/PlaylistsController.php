@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\MusicService;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -13,14 +14,19 @@ class PlaylistsController extends Controller
 {
     public function index()
     {
-        return view('playlists.index');
+        $m = MusicService::HelloWorld();
+        return view('playlists.index',
+            [
+                'message' => $m,
+            ]
+        );
     }
 
     public function search(Request $request)
     {
         if ($request->has('songs-keywords')) {
             $keyword = $request->input('songs-keywords');
-            $songs = $this->searchMusicFromItunes($keyword);
+            $songs = MusicService::searchFromApple($keyword);
 
             return view('playlists.search', [
                 'songs' => $songs,
@@ -31,58 +37,10 @@ class PlaylistsController extends Controller
 
     }
 
-    private function searchMusicFromItunes($keyword){
-        $api_endpoint = "https://itunes.apple.com/search";
-        $term = $keyword;
-        $params = [
-            'term' => $term,
-            'country' => 'JP', // 検索対象の国を指定
-            'media' => 'music', // 検索対象のメディア種別を指定 (allはすべて)
-            'entity' => 'song', // 検索対象の種別を指定 (allはすべて)
-        ];
-
-        $query_string = http_build_query($params);
-        $request_url = "{$api_endpoint}?{$query_string}";
-
-        $response = file_get_contents($request_url);
-
-        if ($response !== false) {
-            $data = json_decode($response, true);
-
-            return $data['results']; //songsの配列を返す
-        }
-
-        return [];
-    }
-
-    //* --- Spotify API処理 --- *//
-
-    private function MakeAuthorzationUrl($state)
-    {
-        $client_id = config('spotify_keys.spotify_client_id');
-        $redirect_uri = config('spotify_keys.spotify_redirect_url');
-        $scope = "user-read-private user-read-email"; // 必要なスコープをスペースで区切って指定
-
-        $authorization_url = "https://accounts.spotify.com/authorize";
-        $authorization_params = [
-            'response_type' => 'code',
-            'client_id' => $client_id,
-            'scope' => $scope,
-            'redirect_uri' => $redirect_uri,
-            'state' => $state
-        ];
-
-        $authorization_url .= '?' . http_build_query($authorization_params);
-
-        // 認可ページのURLを返す
-        return $authorization_url;
-    }
-
-
     public function spotify_auth()
     {
         $state = bin2hex(random_bytes(16));
-        $authorization_url = $this->MakeAuthorzationUrl($state);
+        $authorization_url = MusicService::GenerateSpotifyAuthUrl($state);
         return view('playlists.spotify_auth', [
             'authorization_url' => $authorization_url,
         ]);
@@ -131,13 +89,6 @@ class PlaylistsController extends Controller
                 ]);
 
                 return redirect('/home');
-
-                /*return view('playlists.spotify_callback', [
-                    'access_token' => $access_token,
-                    'refresh_token' => $refresh_token,
-                    'expires_in' => $expires_in,
-                ]);*/
-
             }
 
             $message = "アクセストークンの取得に失敗しました。\n";
@@ -160,11 +111,11 @@ class PlaylistsController extends Controller
             $playlist_url = $request->input('playlist-url');
             $expiresAt = $user->spotify_expires_at;
 
-            $playlist_id = $this->getPlaylistId($playlist_url);
+            $playlist_id = MusicService::getPlaylistId($playlist_url);
 
 
             if($expiresAt < Carbon::now()){
-                [$access_token, $expires_in] = $this->refreshAccessToken($user->spotify_refresh_token);
+                [$access_token, $expires_in] = MusicService::refreshAccessToken($user->spotify_refresh_token);
                 $expiresAt = Carbon::now()->addSeconds($expires_in);
                 User::where('id',Auth::id())->update([
                     'spotify_access_token' => $access_token,
@@ -204,31 +155,4 @@ class PlaylistsController extends Controller
         }
         return view('playlists.spotify_create');
     }
-
-    private function getPlaylistId($playlist_url){
-        preg_match('/playlist\/([a-zA-Z0-9]+)/', $playlist_url, $result);
-        if(isset($result[1])){
-            return $result[1];
-        }
-        return null;
-    }
-
-    private function refreshAccessToken($refreshToken){
-            // アクセストークンが有効期限切れの場合はリフレッシュトークンを使用して新しいアクセストークンを取得
-            $response = Http::asForm()->post('https://accounts.spotify.com/api/token', [
-                'grant_type' => 'refresh_token',
-                'refresh_token' => $refreshToken,
-                'client_id' => config('spotify_keys.spotify_client_id'),
-                'client_secret' => config('spotify_keys.spotify_client_secret'),
-            ]);
-
-            // 新しいアクセストークンと有効期限を取得
-            $newAccessToken = $response->json('access_token');
-            $expiresIn = $response->json('expires_in');
-
-            return [$newAccessToken, $expiresIn];
-    }
 }
-
-
-
