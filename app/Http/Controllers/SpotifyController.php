@@ -58,7 +58,7 @@ class SpotifyController extends Controller
                     // Parse the response body as JSON
                     $track_data = json_decode($response->getBody(), true);
 
-                    return view('playlists.spotify_create', [
+                    return view('spotify.spotify_create', [
                         'track_data' => $track_data,
                     ]);
                 } catch (GuzzleException $e) {
@@ -66,7 +66,7 @@ class SpotifyController extends Controller
                 }
             }
         }
-        return view('playlists.spotify_create');
+        return view('spotify.spotify_create');
     }
 
     /* SpotifyのAPIに関する認証処理 ここから */
@@ -74,7 +74,7 @@ class SpotifyController extends Controller
     {
         $state = bin2hex(random_bytes(16));
         $authorization_url = MusicService::GenerateSpotifyAuthUrl($state);
-        return view('playlists.spotify_auth', [
+        return view('spotify.spotify_auth', [
             'authorization_url' => $authorization_url,
         ]);
     }
@@ -125,13 +125,13 @@ class SpotifyController extends Controller
             }
 
             $message = "アクセストークンの取得に失敗しました。\n";
-            return view('playlists.spotify_callback', [
+            return view('spotify.spotify_callback', [
                 'message' => $message,
             ]);
         }
 
         $message = "stateが存在しませんでした。\n";
-        return view('playlists.spotify_callback', [
+        return view('spotify.spotify_callback', [
             'message' => $message,
         ]);
     }

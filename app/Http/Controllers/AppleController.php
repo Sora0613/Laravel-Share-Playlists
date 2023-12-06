@@ -14,10 +14,10 @@ class AppleController extends Controller
             $keyword = $request->input('songs-keywords');
             $songs = MusicService::searchFromApple($keyword);
 
-            return view('playlists.search', [
+            return view('itunes.search', [
                 'songs' => $songs,
             ]);
         }
-        return view('playlists.search');
+        return view('itunes.search');
     }
 }
