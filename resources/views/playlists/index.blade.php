@@ -10,7 +10,7 @@
 
 <div class="container">
     <header>
-        <h1>Login後のトップページの予定。</h1>
+        <h1>HOME</h1>
         <br>
         <a href="{{ route('search') }}">音楽検索 from iTunes</a>
         <br>
