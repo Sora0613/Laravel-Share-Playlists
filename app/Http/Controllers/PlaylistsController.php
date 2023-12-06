@@ -158,48 +158,48 @@ class PlaylistsController extends Controller
             $user = User::where('id', Auth::id())->first();
 
             $playlist_url = $request->input('playlist-url');
-            $access_token = $user->spotify_access_token;
-            $expiresAt = $user->spotify_access_token_expires_at;
+            $expiresAt = $user->spotify_expires_at;
 
             $playlist_id = $this->getPlaylistId($playlist_url);
 
-            if(Carbon::now()->gte($expiresAt)){
-                list($access_token, $expiresIn) = $this->refreshAccessToken($user->spotify_refresh_token);
-                $user->spotify_access_token = $access_token;
-                $user->spotify_access_token_expires_at = Carbon::now()->addSeconds($expiresIn);
+
+            if($expiresAt < Carbon::now()){
+                [$access_token, $expires_in] = $this->refreshAccessToken($user->spotify_refresh_token);
+                $expiresAt = Carbon::now()->addSeconds($expires_in);
+                User::where('id',Auth::id())->update([
+                    'spotify_access_token' => $access_token,
+                    'spotify_expires_at' => $expiresAt,
+                ]);
+            }else{
+                $access_token = $user->spotify_access_token;
             }
+
 
             if (isset($playlist_id)) {
 
                 $api_url = "https://api.spotify.com/v1/playlists/{$playlist_id}/tracks";
 
-                // ヘッダー設定
-                $headers = [
-                    'Authorization: Bearer ' . $access_token,
-                    'Content-Type: application/json',
-                ];
+                // Guzzleを使ってSpotify APIにリクエストを送る
+                $client = new \GuzzleHttp\Client();
 
-                // APIリクエスト
-                $options = [
-                    'http' => [
-                        'header' => $headers,
-                        'method' => 'GET',
-                    ],
-                ];
+                //try {
+                    // Send a GET request to the Spotify API
+                    $response = $client->request('GET', $api_url, [
+                        'headers' => [
+                            'Authorization' => 'Bearer ' . $access_token,
+                            'Content-Type' => 'application/json',
+                        ]
+                    ]);
 
-                $context = stream_context_create($options);
-                $response = file_get_contents($api_url, false, $context);
-
-                if ($response !== false) {
-                    $json = $response;
-                    $track_data = json_decode($json, true);
+                    // Parse the response body as JSON
+                    $track_data = json_decode($response->getBody(), true);
 
                     return view('playlists.spotify_create', [
-                        'access_token' => $access_token,
-                        'user' => $user,
                         'track_data' => $track_data,
                     ]);
-                }
+                //} catch (\GuzzleHttp\Exception\GuzzleException $e) {
+                    //abort(500, $e->getMessage());
+                //}
             }
         }
         return view('playlists.spotify_create');
@@ -218,8 +218,8 @@ class PlaylistsController extends Controller
             $response = Http::asForm()->post('https://accounts.spotify.com/api/token', [
                 'grant_type' => 'refresh_token',
                 'refresh_token' => $refreshToken,
-                'client_id' => 'YOUR_CLIENT_ID',
-                'client_secret' => 'YOUR_CLIENT_SECRET',
+                'client_id' => config('spotify_keys.spotify_client_id'),
+                'client_secret' => config('spotify_keys.spotify_client_secret'),
             ]);
 
             // 新しいアクセストークンと有効期限を取得
