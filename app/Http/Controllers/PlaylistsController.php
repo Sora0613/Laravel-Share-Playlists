@@ -14,12 +14,7 @@ class PlaylistsController extends Controller
 {
     public function index()
     {
-        $m = MusicService::HelloWorld();
-        return view('playlists.index',
-            [
-                'message' => $m,
-            ]
-        );
+        return view('playlists.index');
     }
 
     public function search(Request $request)

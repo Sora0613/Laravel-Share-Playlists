@@ -1,0 +1,89 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease; /* ダークモード切り替え時のトランジション */
+}
+
+.container {
+    text-align: center;
+    margin: 50px auto;
+    max-width: 800px; /* 画面幅の最大値を指定 */
+    padding: 20px;
+    background-color: #e0e0e0; /* 新しい色を指定 */
+    border-radius: 10px; /* 角を丸くする */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease; /* ダークモード切り替え時のトランジション */
+}
+
+header {
+    padding: 20px;
+    border-radius: 10px; /* 角を丸くする */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: transparent; /* 透明にする */
+}
+
+h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+a {
+    display: block;
+    color: #3498db;
+    text-decoration: none;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #fff;
+    transition: background-color 0.3s ease, color 0.3s ease; /* ダークモード切り替え時のトランジション */
+}
+
+a:hover {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.dark-mode-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: transparent;
+    border: none;
+    color: #3498db;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center; /* アイコンを中央に配置 */
+    transition: color 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+    color: #1e6cd1;
+}
+
+.dark-mode-icon {
+    margin-right: 5px;
+}
+
+/* ダークモードのスタイル */
+body.dark-mode {
+    background-color: #333; /* ダークモード時の背景色 */
+    color: #fff;
+}
+
+.container.dark-mode {
+    background-color: #555; /* ダークモード時のコンテナの背景色 */
+}
+
+header.dark-mode {
+    background-color: transparent; /* ダークモード時のヘッダーの背景色 */
+}
+
+a.dark-mode {
+    background-color: #555; /* ダークモード時のリンクの背景色 */
+    color: #fff;
+}
