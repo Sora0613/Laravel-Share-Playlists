@@ -22,8 +22,11 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/home', [App\Http\Controllers\PlaylistsController::class, 'index'])->name('index'); //表示
+    /*通常プレイリスト*/
 
+    Route::get('/home', [App\Http\Controllers\PlaylistsController::class, 'index'])->name('index'); //表示
+    Route::get('/playlist/create', [App\Http\Controllers\PlaylistsController::class, 'playlistCreate'])->name('playlist.create'); //表示
+    Route::post('/playlist/create', [App\Http\Controllers\PlaylistsController::class, 'playlistStore'])->name('playlist.store'); //登録
 
     /* iTunesここから */
 

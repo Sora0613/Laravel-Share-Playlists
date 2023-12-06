@@ -12,6 +12,8 @@
     <header>
         <h1>HOME</h1>
         <br>
+        <a href="{{ route('playlist.create') }}">プレイリストを作成する。</a>
+        <br>
         <a href="{{ route('search') }}">音楽検索 from iTunes</a>
         <br>
         @if(Auth::user()->spotify_login === 1)
