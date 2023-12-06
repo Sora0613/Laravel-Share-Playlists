@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Facades\MusicService;
 use App\Models\User;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -55,7 +57,7 @@ class PlaylistsController extends Controller
             // アクセストークンを取得するためのリクエスト
             $token_url = 'https://accounts.spotify.com/api/token';
 
-            $client = new \GuzzleHttp\Client();
+            $client = new Client();
             $response = $client->request('POST', $token_url, [
                 'form_params' => [
                     'code' => $code,
@@ -102,6 +104,9 @@ class PlaylistsController extends Controller
     {
         if($request->has('playlist-url')) {
             $user = User::where('id', Auth::id())->first();
+            if(empty($user)){
+                return redirect('/spotify/auth');
+            }
 
             $playlist_url = $request->input('playlist-url');
             $expiresAt = $user->spotify_expires_at;
@@ -123,12 +128,12 @@ class PlaylistsController extends Controller
 
             if (isset($playlist_id)) {
 
-                $api_url = "https://api.spotify.com/v1/playlists/{$playlist_id}/tracks";
+                $api_url = "https://api.spotify.com/v1/playlists/$playlist_id/tracks";
 
                 // Guzzleを使ってSpotify APIにリクエストを送る
-                $client = new \GuzzleHttp\Client();
+                $client = new Client();
 
-                //try {
+                try {
                     // Send a GET request to the Spotify API
                     $response = $client->request('GET', $api_url, [
                         'headers' => [
@@ -143,9 +148,9 @@ class PlaylistsController extends Controller
                     return view('playlists.spotify_create', [
                         'track_data' => $track_data,
                     ]);
-                //} catch (\GuzzleHttp\Exception\GuzzleException $e) {
-                    //abort(500, $e->getMessage());
-                //}
+                } catch (GuzzleException $e) {
+                    abort(500, $e->getMessage());
+                }
             }
         }
         return view('playlists.spotify_create');
