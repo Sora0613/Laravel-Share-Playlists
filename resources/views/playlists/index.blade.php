@@ -15,7 +15,7 @@
         <a href="{{ route('search') }}">音楽検索 from iTunes</a>
         <br>
         @if(Auth::user()->spotify_login === 1)
-            <a href="{{ route('spotify.create') }}">プレイリストのURLを読み込む</a>
+            <a href="{{ route('spotify.search') }}">プレイリストのURLを読み込む</a>
         @else
             <a href="{{ route('spotify.auth') }}">Spotifyでログイン</a>
         @endif
