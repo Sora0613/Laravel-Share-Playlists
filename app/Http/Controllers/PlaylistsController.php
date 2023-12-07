@@ -22,6 +22,11 @@ class PlaylistsController extends Controller
 
     public function playlistCreate()
     {
+        $playlists = Playlist::where('user_id', Auth::user()->id)->get();
+        if (count($playlists) > 0) {
+            return view('playlists.create', compact('playlists'));
+        }
+
         return view('playlists.create');
     }
 
@@ -40,7 +45,16 @@ class PlaylistsController extends Controller
             'is_private' => $request->input('is_private') ? true : false,
         ]);
 
+        return view('playlists.create');
+    }
 
-        return back();
+    public function playlistShow($id)
+    {
+        $playlist = Playlist::find($id);
+        $user = User::find($playlist->user_id);
+
+        /* プレイリストに登録されている曲を取得。
+        is_privateがonなら、自分のプレイリスト以外は表示しない。 */
+
     }
 }
