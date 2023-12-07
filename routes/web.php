@@ -28,6 +28,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/playlist/create', [App\Http\Controllers\PlaylistsController::class, 'playlistCreate'])->name('playlist.create'); //表示
     Route::post('/playlist/create', [App\Http\Controllers\PlaylistsController::class, 'playlistStore'])->name('playlist.store'); //登録
 
+    Route::get('/playlist/{playlist_id}', [App\Http\Controllers\PlaylistsController::class, 'playlistShow'])->name('playlist.show'); //表示
+
     /* iTunesここから */
 
     Route::get('/apple/search', [App\Http\Controllers\AppleController::class, 'search'])->name('search'); //表示
