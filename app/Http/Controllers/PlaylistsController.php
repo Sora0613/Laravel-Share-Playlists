@@ -56,5 +56,16 @@ class PlaylistsController extends Controller
         /* プレイリストに登録されている曲を取得。
         is_privateがonなら、自分のプレイリスト以外は表示しない。 */
 
+        if ($playlist->is_private) {
+
+            if ($playlist->user_id === Auth::user()->id) {
+                return view('playlists.show', compact('playlist', 'user'));
+            }
+
+            $message = 'このプレイリストは非公開です。';
+            return view('playlists.show', compact('message'));
+        }
+
+        return view('playlists.show', compact('playlist', 'user'));
     }
 }
