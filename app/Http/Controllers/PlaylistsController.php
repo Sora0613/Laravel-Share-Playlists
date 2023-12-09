@@ -23,6 +23,7 @@ class PlaylistsController extends Controller
     public function playlistCreate()
     {
         $playlists = Playlist::where('user_id', Auth::user()->id)->get();
+
         if (count($playlists) > 0) {
             return view('playlists.create', compact('playlists'));
         }
@@ -45,7 +46,9 @@ class PlaylistsController extends Controller
             'is_private' => $request->input('is_private') ? true : false,
         ]);
 
-        return view('playlists.create');
+        $playlists = Playlist::where('user_id', Auth::user()->id)->get();
+
+        return view('playlists.create', compact('playlists'));
     }
 
     public function playlistShow($id)
