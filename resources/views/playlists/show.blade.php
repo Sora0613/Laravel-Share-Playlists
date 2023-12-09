@@ -14,7 +14,15 @@
     @isset($message)
         <p>{{ $message }}</p>
     @endisset
-    <p>detail here</p>
+
+    <div class="playlist-list">
+        <div class="playlist-item">
+            @isset($playlist)
+                <h2>Playlist Name : {{ $playlist->playlist_name }}</h2>
+                <p>Playlist Description : {{ $playlist->playlist_description }}</p>
+            @endisset
+        </div>
+    </div>
 </div>
 
 </body>

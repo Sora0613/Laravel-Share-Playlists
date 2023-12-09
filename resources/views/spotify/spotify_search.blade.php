@@ -10,38 +10,27 @@
 
 <div class="container">
     <a href="{{ route('index') }}" class="top-link">Back to Top</a>
-    <h1>Get Songs From Playlist</h1>
+    <h1>Import Playlist From Spotify</h1>
+    @isset($message)
+        <p>{{ $message }}</p>
+    @endisset
 
     <form id="song-form" action="{{ route('spotify.playlist.search') }}" method="GET">
         @csrf
+        <label for="playlist_name">Playlist Name:</label>
+        <input type="text" id="playlist_name" name="playlist_name" placeholder="Playlist Title Here" required>
+
+        <label for="playlist_description">Playlist Description:</label>
+        <input type="text" id="playlist_description" name="playlist_description" placeholder="Playlist Description Here" required>
+
+        <label for="is_private">Private Playlist:</label>
+        <input type="checkbox" id="is_private" name="is_private">
+
         <label for="playlist-url">Playlist URL:</label>
         <input type="url" id="playlist-url" name="playlist-url" placeholder="https://open.spotify.com/playlist/*********" required>
 
         <button type="submit">Create Playlist</button>
     </form>
-
-    @isset($track_data)
-        <div class="result-form">
-            <table>
-                <thead>
-                <tr>
-                    <th>Artwork</th>
-                    <th>Artist</th>
-                    <th>Song Title</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($track_data['items'] as $song)
-                    <tr>
-                        <td><img src="{{ $song['track']['album']['images'][0]['url'] }}" alt="song artwork" width="100" height="100"></td>
-                        <td>{{ $song['track']['artists'][0]['name'] }}</td>
-                        <td>{{ $song['track']['name'] }}</td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
-        </div>
-    @endisset
 </div>
 
 </body>

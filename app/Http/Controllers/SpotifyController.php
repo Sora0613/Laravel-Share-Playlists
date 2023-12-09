@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Playlist;
+use App\Models\Song;
 use App\Models\User;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -21,10 +23,10 @@ class SpotifyController extends Controller
                 return redirect('/spotify/auth');
             }
 
-            $playlist_url = $request->input('playlist-url');
+            $spotify_playlist_url = $request->input('playlist-url');
             $expiresAt = $user->spotify_expires_at;
 
-            $playlist_id = MusicService::getPlaylistId($playlist_url);
+            $spotify_playlist_id = MusicService::getPlaylistId($spotify_playlist_url);
 
 
             if($expiresAt < Carbon::now()){
@@ -39,28 +41,63 @@ class SpotifyController extends Controller
             }
 
 
-            if (isset($playlist_id)) {
+            if (isset($spotify_playlist_id)) {
+                $api_url = "https://api.spotify.com/v1/playlists/$spotify_playlist_id/tracks";
 
-                $api_url = "https://api.spotify.com/v1/playlists/$playlist_id/tracks";
-
-                // Guzzleを使ってSpotify APIにリクエストを送る
                 $client = new Client();
 
                 try {
-                    // Send a GET request to the Spotify API
                     $response = $client->request('GET', $api_url, [
                         'headers' => [
                             'Authorization' => 'Bearer ' . $access_token,
                             'Content-Type' => 'application/json',
                         ]
                     ]);
-
-                    // Parse the response body as JSON
                     $track_data = json_decode($response->getBody(), true);
 
+                    if(isset($track_data['items']) && is_array($track_data['items'])) {
+                        $track_data = $track_data['items'];
+
+                        $request->validate([
+                            'playlist_name' => 'required|max:255',
+                            'playlist_description' => 'required|max:255',
+                        ]);
+
+                        $playlist = Playlist::create([
+                            'playlist_name' => $request->input('playlist_name'),
+                            'playlist_description' => $request->input('playlist_description'),
+                            'user_id' => Auth::user()->id,
+                            'is_private' => $request->input('is_private') ? true : false,
+                        ]);
+
+                        foreach ($track_data as $song) {
+                            $artwork = $song['track']['album']['images'][0]['url'];
+                            $song_name = $song['track']['name'];
+                            $artist_name = $song['track']['artists'][0]['name'];
+                            $album_name = $song['track']['album']['name'];
+
+                            Song::create([
+                                'song_name' => $song_name,
+                                'artist_name' => $artist_name,
+                                'album_name' => $album_name,
+                                'artwork_url' => $artwork,
+                                'playlist_id' => $playlist->id,
+                            ]);
+                        }
+                        $message = "プレイリストを作成しました。\n";
+
+                        return view('spotify.spotify_search', [
+                            'message' => $message,
+                        ]);
+                    }
+
+                    $message = "プレイリストの取得に失敗しました。\n";
+
                     return view('spotify.spotify_search', [
-                        'track_data' => $track_data,
+                        'message' => $message,
                     ]);
+
+
                 } catch (GuzzleException $e) {
                     abort(500, $e->getMessage());
                 }
