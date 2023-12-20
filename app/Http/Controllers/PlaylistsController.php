@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Facades\MusicService;
 use App\Models\Playlist;
 use App\Models\Song;
 use App\Models\User;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Http;
 
 class PlaylistsController extends Controller
 {
-    public function index()
+    public function home()
     {
-        return view('playlists.index');
+        return view('playlists.home');
     }
 
-    public function playlistCreate()
+    public function index()
+    {
+        $playlists = Playlist::where('user_id', Auth::user()->id)->get();
+
+        return view('playlists.index', compact('playlists'));
+    }
+
+    public function create()
     {
         $playlists = Playlist::where('user_id', Auth::user()->id)->get();
 
@@ -32,9 +33,8 @@ class PlaylistsController extends Controller
         return view('playlists.create');
     }
 
-    public function playlistStore(Request $request)
+    public function store(Request $request)
     {
-
         $request->validate([
             'playlist_name' => 'required|max:255',
             'playlist_description' => 'required|max:255',
@@ -52,7 +52,7 @@ class PlaylistsController extends Controller
         return view('playlists.create', compact('playlists'));
     }
 
-    public function playlistShow($id)
+    public function show($id)
     {
         /* プレイリストに登録されている曲を取得。
         is_privateがonなら、自分のプレイリスト以外は表示しない。
@@ -83,41 +83,19 @@ class PlaylistsController extends Controller
         return view('playlists.show', compact('playlist', 'user', 'songs'));
     }
 
-    public function playlistSongAdd(Request $request)
+    public function edit($id)
     {
-        $encodedSong = $request->input('song');
-        $playlist_id = $request->playlist;
-
-        // デコード
-        $song = json_decode(base64_decode($encodedSong), true);
-
-        Song::create([
-            'song_name' => $song['trackName'],
-            'artist_name' => $song['artistName'],
-            'album_name' => $song['collectionName'],
-            'artwork_url' => $song['artworkUrl100'],
-            'playlist_id' => $playlist_id,
-        ]);
-
-        $message = '曲を追加しました。';
-
-        return back()->with('message', $message);
+        //
     }
 
-    public function playlistSongDelete(Request $request, $song_id)
+    public function update(Request $request, $id)
     {
-        $song = Song::find($song_id);
-        $song->delete();
-
-        $message = '曲を削除しました。';
-
-        return back()->with('message', $message);
+        //
     }
 
-    public function showAllPlaylists()
+    public function destroy($id)
     {
-        $playlists = Playlist::where('user_id', Auth::user()->id)->get();
-
-        return view('playlists.lists', compact('playlists'));
+        //
     }
+
 }

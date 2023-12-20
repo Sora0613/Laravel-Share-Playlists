@@ -9,7 +9,7 @@
 <body>
 
 <div class="container">
-    <a href="{{ route('index') }}" class="top-link">Back to Top</a>
+    <a href="{{ route('home') }}" class="top-link">Back to Top</a>
     <h1>Search Songs</h1>
     @if(session('message'))
         <p>{{ session('message') }}</p>
@@ -46,7 +46,7 @@
                         <td>{{ $song['releaseDate'] }}</td>
                         @isset($playlists)
                             <td>
-                                <form action="{{ route('playlist.song.add') }}" method="POST">
+                                <form action="{{ route('songs.store') }}" method="POST">
                                     @csrf
                                     <label for="Playlists">Playlists</label>
                                     <input type="hidden" name="song" value="{{ base64_encode(json_encode($song)) }}">

@@ -9,7 +9,7 @@
 <body>
 
 <div class="container">
-    <a href="{{ route('index') }}" class="top-link">Back to Top</a>
+    <a href="{{ route('home') }}" class="top-link">Back to Top</a>
     <h1>Detail of your playlist.</h1>
     @if(session('message'))
         <p>{{ session('message') }}</p>
@@ -45,7 +45,7 @@
                                     <td>{{ $song->album_name }}</td>
                                     @if($playlist->user_id === Auth::user()->id)
                                         <td>
-                                            <form action="{{ route('playlist.song.delete', ['song_id' => $song->id ]) }}" method="POST">
+                                            <form action="{{ route('songs.destroy', ['song' => $song->id ]) }}" method="POST">
                                                 @method('DELETE')
                                                 @csrf
                                                 <button type="submit">Delete</button>

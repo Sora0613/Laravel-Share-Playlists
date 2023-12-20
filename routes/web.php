@@ -22,17 +22,13 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
 
+    /* Home */
+    Route::get('/home', [App\Http\Controllers\PlaylistsController::class, 'home'])->name('home'); //表示
+
     /*通常プレイリスト*/
 
-    Route::get('/home', [App\Http\Controllers\PlaylistsController::class, 'index'])->name('index'); //表示
-    Route::get('/playlist/all', [App\Http\Controllers\PlaylistsController::class, 'showAllPlaylists'])->name('playlist.all'); //表示
-    Route::get('/playlist/create', [App\Http\Controllers\PlaylistsController::class, 'playlistCreate'])->name('playlist.create'); //表示
-    Route::post('/playlist/create', [App\Http\Controllers\PlaylistsController::class, 'playlistStore'])->name('playlist.store'); //登録
-
-    Route::post('/playlist/song/add', [App\Http\Controllers\PlaylistsController::class, 'playlistSongAdd'])->name('playlist.song.add'); //登録
-    Route::delete('/playlist/song/delete/{song_id}', [App\Http\Controllers\PlaylistsController::class, 'playlistSongDelete'])->name('playlist.song.delete'); //登録
-
-    //Route::get('/playlist/{playlist_id}', [App\Http\Controllers\PlaylistsController::class, 'playlistShow'])->name('playlist.show'); //表示
+    Route::resource('playlists', App\Http\Controllers\PlaylistsController::class); //表示
+    Route::resource('songs', App\Http\Controllers\SongsController::class, ['only' => ['store', 'destroy']]); //表示
 
     /* iTunesここから */
 
@@ -55,5 +51,3 @@ Route::middleware(['auth'])->group(function () {
     /* Spotifyここまで */
 
 });
-
-Route::get('/playlist/{playlist_id}', [App\Http\Controllers\PlaylistsController::class, 'playlistShow'])->name('playlist.show'); //ログインしていない人にも表示を行いたいため、Authから除外。

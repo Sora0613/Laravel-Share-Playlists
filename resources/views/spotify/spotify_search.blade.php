@@ -9,7 +9,7 @@
 <body>
 
 <div class="container">
-    <a href="{{ route('index') }}" class="top-link">Back to Top</a>
+    <a href="{{ route('home') }}" class="top-link">Back to Top</a>
     <h1>Import Playlist From Spotify</h1>
     @isset($message)
         <p>{{ $message }}</p>

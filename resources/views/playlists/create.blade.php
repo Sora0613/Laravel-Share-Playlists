@@ -54,13 +54,13 @@
 <body>
 
 <div class="container">
-    <a href="{{ route('index') }}" class="top-link">Back to Top</a>
+    <a href="{{ route('home') }}" class="top-link">Back to Top</a>
     <h1>Create Your Own Playlists.</h1>
     @isset($message)
         <p>{{ $message }}</p>
     @endisset
 
-    <form id="form" action="{{ route('playlist.store') }}" method="POST">
+    <form id="form" action="{{ route('playlists.store') }}" method="POST">
         @csrf
         <label for="playlist-name">Playlist Name:</label>
         <input type="text" id="playlist-name" name="playlist_name" required>
@@ -79,7 +79,7 @@
             @if(isset($playlists))
                 @foreach ($playlists as $playlist)
                     <li class="playlist-item">
-                        <a href="{{ route('playlist.show', ['playlist_id' => $playlist['id']]) }}">{{ $playlist['playlist_name'] }}</a>
+                        <a href="{{ route('playlists.show', ['playlist' => $playlist['id']]) }}">{{ $playlist['playlist_name'] }}</a>
                     </li>
                 @endforeach
             @else
