@@ -11,16 +11,19 @@
 <div class="container">
     <a href="{{ route('index') }}" class="top-link">Back to Top</a>
     <h1>Search Songs</h1>
+    @if(session('message'))
+        <p>{{ session('message') }}</p>
+    @endif
 
     <form id="song-form" action="{{ route('search.do') }}" method="GET">
         @csrf
-        <label for="songs-keywords">Keyword:</label>
-        <input type="text" id="songs-keywords" name="songs-keywords" required>
+        <label for="songs_keywords">Keyword:</label>
+        <input type="text" id="songs_keywords" name="songs_keywords" required>
 
         <button type="submit">Search Songs</button>
     </form>
 
-    @if (isset($songs))
+    @isset($songs)
         <div class="result-form">
             <table>
                 <thead>
@@ -30,6 +33,7 @@
                     <th>Song Title</th>
                     <th>Genre</th>
                     <th>Release Date</th>
+                    <th>Add To ...</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -40,12 +44,29 @@
                         <td>{{ $song['trackName'] }}</td>
                         <td>{{ $song['primaryGenreName'] }}</td>
                         <td>{{ $song['releaseDate'] }}</td>
+                        @isset($playlists)
+                            <td>
+                                <form action="{{ route('playlist.song.add') }}" method="POST">
+                                    @csrf
+                                    <label for="Playlists">Playlists</label>
+                                    <input type="hidden" name="song" value="{{ base64_encode(json_encode($song)) }}">
+                                    <select name="playlist" id="playlist">
+                                        @foreach($playlists as $playlist)
+                                            <option value="{{ $playlist->id }}"> {{ $playlist->playlist_name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <br>
+                                    <br>
+                                    <button type="submit">Add</button>
+                                </form>
+                            </td>
+                        @endisset
                     </tr>
                 @endforeach
                 </tbody>
             </table>
         </div>
-    @endif
+    @endisset
 </div>
 
 </body>
