@@ -3,61 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Share Playlists - HOME</title>
-    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+    <title>Share Playlist - Create Playlist</title>
+    <link rel="stylesheet" href="{{ asset('css/search-styles.css') }}">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            text-align: center;
+            margin: 50px auto;
+            max-width: 800px;
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #333;
+        }
+
+        .playlist-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .playlist-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .playlist-item a {
+            display: block;
+            padding: 15px;
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.3s ease;
+        }
+
+        .playlist-item a:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <h1>HOME</h1>
-        <br>
-        <a href="{{ route('playlist.all') }}">プレイリスト一覧を表示</a>
-        <br>
-        <a href="{{ route('playlist.create') }}">プレイリストを作成する。</a>
-        <br>
-        <a href="{{ route('search') }}">音楽検索 from iTunes</a>
-        <br>
-        @if(Auth::user()->spotify_login === 1)
-            <a href="{{ route('spotify.search') }}">プレイリストのURLを読み込む</a>
+    <a href="{{ route('home') }}" class="top-link">Back to Top</a>
+    <h1>All your playlists.</h1>
+    @isset($message)
+        <p>{{ $message }}</p>
+    @endisset
+
+    <h2>Playlists</h2>
+    <ul class="playlist-list">
+        @if(isset($playlists))
+            @foreach ($playlists as $playlist)
+                <li class="playlist-item">
+                    <a href="{{ route('playlists.show', ['playlist' => $playlist['id']]) }}">{{ $playlist['playlist_name'] }}</a>
+                </li>
+            @endforeach
         @else
-            <a href="{{ route('spotify.auth') }}">Spotifyでログイン</a>
+            <li class="playlist-item">
+                <p>No playlists found.</p>
+            </li>
         @endif
-        <br>
-        <a href="{{ route('logout') }}"
-           onclick="event.preventDefault();
-                   document.getElementById('logout-form').submit();">
-            {{ __('Logout') }}
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                @csrf
-            </form>
-        </a>
-    </header>
+    </ul>
 </div>
-
-<button class="dark-mode-toggle" onclick="toggleDarkMode()">
-    <span class="dark-mode-icon"></span>
-    <span id="dark-mode-text">🌙 Dark Mode</span>
-</button>
-
-<script>
-    function toggleDarkMode() {
-        const body = document.querySelector('body');
-        const header = document.querySelector('header');
-        const links = document.querySelectorAll('a');
-        const darkModeText = document.querySelector('#dark-mode-text');
-
-        body.classList.toggle('dark-mode');
-        header.classList.toggle('dark-mode');
-
-        links.forEach(link => {
-            link.classList.toggle('dark-mode');
-        });
-
-        // ダークモード時は "Light Mode"、通常モード時は "Dark Mode" に変更
-        darkModeText.innerText = body.classList.contains('dark-mode') ? '🌞️ Light Mode' : '🌙 Dark Mode';
-    }
-</script>
 
 </body>
 </html>
