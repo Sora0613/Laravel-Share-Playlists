@@ -1,94 +1,41 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Share Playlist - Create Playlist</title>
-    <link rel="stylesheet" href="{{ asset('css/search-styles.css') }}">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #f5f5f5;
-        }
-
-        .container {
-            text-align: center;
-            margin: 50px auto;
-            max-width: 800px;
-        }
-
-        h1 {
-            font-size: 2em;
-            color: #333;
-        }
-
-        .playlist-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .playlist-item {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .playlist-item a {
-            display: block;
-            padding: 15px;
-            text-decoration: none;
-            color: #333;
-            transition: background-color 0.3s ease;
-        }
-
-        .playlist-item a:hover {
-            background-color: #f5f5f5;
-        }
-    </style>
+    <title>プレイリスト作成</title>
+    <link rel="stylesheet" href="{{ asset('css/new_styles.css') }}">
 </head>
 <body>
 
-<div class="container">
-    <a href="{{ route('home') }}" class="top-link">Back to Top</a>
-    <h1>Create Your Own Playlists.</h1>
+<div class="page-container">
+    <a href="{{ route('home') }}" class="back-to-index">Homeへ戻る</a>
+    <h1>プレイリスト作成</h1>
     @isset($message)
         <p>{{ $message }}</p>
     @endisset
 
-    <form id="form" action="{{ route('playlists.store') }}" method="POST">
+    <form action="{{ route('playlists.store') }}" method="POST">
         @csrf
-        <label for="playlist-name">Playlist Name:</label>
-        <input type="text" id="playlist-name" name="playlist_name" required>
+        <div class="form-group">
+            <label for="playlist_name">プレイリスト名:</label>
+            <input type="text" id="playlist_name" name="playlist_name" class="large-input" required>
+        </div>
 
-        <label for="playlist-description">Playlist Description:</label>
-        <input type="text" id="playlist-description" name="playlist_description" required>
+        <div class="form-group">
+            <label for="playlist_description">プレイリスト説明:</label>
+            <input id="playlist_description" name="playlist_description" class="rounded-input">
+        </div>
 
-        <label for="is-private">Private Playlist:</label>
-        <input type="checkbox" id="is-private" name="is_private">
+        <div class="form-group checkbox-group">
+            <label for="is_private">非公開にする:</label>
+            <input type="checkbox" id="is_private" name="is_private">
+        </div>
 
-        <button type="submit">Create</button>
+        <button class="btn" type="submit">作成する</button>
     </form>
-
-    <h2>Playlists</h2>
-        <ul class="playlist-list">
-            @if(isset($playlists))
-                @foreach ($playlists as $playlist)
-                    <li class="playlist-item">
-                        <a href="{{ route('playlists.show', ['playlist' => $playlist['id']]) }}">{{ $playlist['playlist_name'] }}</a>
-                    </li>
-                @endforeach
-            @else
-                <li class="playlist-item">
-                    <p>No playlists found.</p>
-                </li>
-            @endif
-        </ul>
 </div>
 
 </body>
 </html>
+

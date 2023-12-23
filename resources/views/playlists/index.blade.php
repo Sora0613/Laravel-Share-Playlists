@@ -3,78 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Share Playlist - Create Playlist</title>
-    <link rel="stylesheet" href="{{ asset('css/search-styles.css') }}">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #f5f5f5;
-        }
-
-        .container {
-            text-align: center;
-            margin: 50px auto;
-            max-width: 800px;
-        }
-
-        h1 {
-            font-size: 2em;
-            color: #333;
-        }
-
-        .playlist-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .playlist-item {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .playlist-item a {
-            display: block;
-            padding: 15px;
-            text-decoration: none;
-            color: #333;
-            transition: background-color 0.3s ease;
-        }
-
-        .playlist-item a:hover {
-            background-color: #f5f5f5;
-        }
-    </style>
+    <title>プレイリスト一覧</title>
+    <link rel="stylesheet" href="{{ asset('css/new_styles.css') }}">
 </head>
 <body>
 
-<div class="container">
-    <a href="{{ route('home') }}" class="top-link">Back to Top</a>
-    <h1>All your playlists.</h1>
+<div class="page-container">
+    <a href="{{ route('home') }}" class="back-to-index">Homeへ戻る</a>
+    <h1>プレイリスト一覧</h1>
+
     @isset($message)
         <p>{{ $message }}</p>
     @endisset
 
-    <h2>Playlists</h2>
     <ul class="playlist-list">
         @if(isset($playlists))
             @foreach ($playlists as $playlist)
-                <li class="playlist-item">
-                    <a href="{{ route('playlists.show', ['playlist' => $playlist['id']]) }}">{{ $playlist['playlist_name'] }}</a>
+                <li>
+                    @if(isset($playlist['playlist_cover']))
+                        <img src="{{ asset('storage/playlist_cover/' . $playlist['playlist_cover']) }}" alt="Playlist Image" class="playlist-image">
+                    @else
+                        <img src="{{ asset('cover.jpeg') }}" alt="Playlist Image" class="playlist-image">
+                    @endif
+                    <a href="{{ route('playlists.show', ['playlist' => $playlist['id']]) }}" class="playlist-name">{{ $playlist['playlist_name'] }}</a>
+                    <p class="playlist-description">{{ $playlist['playlist_description'] }}</p>
+                    <a href="#" class="btn edit-btn">...</a>
                 </li>
             @endforeach
         @else
-            <li class="playlist-item">
+            <li>
                 <p>No playlists found.</p>
             </li>
         @endif
     </ul>
-</div>
 
+</div>
 </body>
 </html>
