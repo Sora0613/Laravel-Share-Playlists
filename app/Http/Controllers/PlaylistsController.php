@@ -40,16 +40,23 @@ class PlaylistsController extends Controller
             'playlist_description' => 'required|max:255',
         ]);
 
-        Playlist::create([
-            'playlist_name' => $request->input('playlist_name'),
-            'playlist_description' => $request->input('playlist_description'),
-            'user_id' => Auth::user()->id,
-            'is_private' => $request->input('is_private') ? true : false,
-        ]);
+        try {
 
-        $playlists = Playlist::where('user_id', Auth::user()->id)->get();
+            Playlist::create([
+                'playlist_name' => $request->input('playlist_name'),
+                'playlist_description' => $request->input('playlist_description'),
+                'user_id' => Auth::user()->id,
+                'is_private' => $request->input('is_private') ? true : false,
+            ]);
 
-        return view('playlists.create', compact('playlists'));
+            $playlists = Playlist::where('user_id', Auth::user()->id)->get();
+            $message = "プレイリストを作成しました。";
+        } catch (\Exception $e) {
+            $message = "プレイリストの作成に失敗しました。";
+            return redirect()->route('playlists.create', compact('message'));
+        }
+
+        return view('playlists.create', compact('playlists', 'message'));
     }
 
     public function show($id)
@@ -85,12 +92,23 @@ class PlaylistsController extends Controller
 
     public function edit($id)
     {
-        //
+        $playlist = Playlist::find($id);
+        return view('playlists.edit', compact('playlist'));
     }
 
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'playlist_name' => 'required|string|max:255',
+            'playlist_description' => 'nullable|string',
+            'is_private' => 'boolean',
+            'playlist_cover' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $playlist = Playlist::find($id);
+        $playlist->updatePlaylist($request->all(), $id);
+
+        return redirect()->route('playlists.show', $id);
     }
 
     public function destroy($id)
