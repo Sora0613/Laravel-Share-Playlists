@@ -1,0 +1,358 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #2980b9;
+}
+
+.spotify-login {
+    background-color: #1db954;
+}
+
+.logout {
+    background-color: #e74c3c;
+}
+
+.page-container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #3498db;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.edit-btn {
+    background-color: #2ecc71;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.large-input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.rounded-input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Search Page */
+
+.search-box-container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.search-box {
+    text-align: center;
+}
+
+.search-input {
+    width: 60%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-right: 10px;
+}
+
+.search-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-btn:hover {
+    background-color: #2980b9;
+}
+
+.search-results-container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.search-results table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.search-results th, .search-results td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.search-results th {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.search-results img {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 5px;
+}
+
+/* Search Page */
+
+.add-to-container {
+    display: flex;
+    align-items: center;
+}
+
+.playlist-dropdown {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.add-to-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    background-color: #27ae60;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;
+}
+
+.add-to-btn:hover {
+    background-color: #219952;
+}
+
+
+
+.back-to-index {
+    display: block;
+    margin-bottom: 20px;
+    text-align: center;
+    text-decoration: none;
+    padding: 10px;
+    background-color: #3498db;
+    color: #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.back-to-index:hover {
+    background-color: #2980b9;
+}
+
+/* Show Page */
+
+.playlist-details {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.playlist-content {
+    width: calc(100% - 120px);
+}
+
+.playlist-details h1 {
+    color: #3498db;
+}
+
+.playlist-description {
+    font-size: 16px;
+    color: #555;
+}
+
+.playlist-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Edit Page */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.large-input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.edit-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    background-color: #27ae60;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    float: right;
+}
+
+.edit-btn:hover {
+    background-color: #219952;
+}
+
+/* List Page */
+
+.playlist-list {
+    list-style: none;
+    padding: 0;
+}
+
+.playlist-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.playlist-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+.playlist-name {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.playlist-name:hover {
+    color: #2980b9;
+}
+
+.playlist-description {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Show Page */
+.edit-btn, .delete-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 5px;
+}
+
+.edit-btn {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.delete-btn {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+    background-color: #2980b9;
+}
