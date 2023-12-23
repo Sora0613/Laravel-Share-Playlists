@@ -12,9 +12,9 @@
     <a href="{{ route('home') }}" class="back-to-index">Homeへ戻る</a>
     <h1>プレイリスト一覧</h1>
 
-    @isset($message)
-        <p>{{ $message }}</p>
-    @endisset
+    @if(session('message'))
+        <p>{{ session('message') }}</p>
+    @endif
 
     <ul class="playlist-list">
         @if(isset($playlists))
@@ -25,9 +25,14 @@
                     @else
                         <img src="{{ asset('cover.jpeg') }}" alt="Playlist Image" class="playlist-image">
                     @endif
-                    <a href="{{ route('playlists.show', ['playlist' => $playlist['id']]) }}" class="playlist-name">{{ $playlist['playlist_name'] }}</a>
-                    <p class="playlist-description">{{ $playlist['playlist_description'] }}</p>
-                    <a href="#" class="btn edit-btn">...</a>
+                        <a href="{{ route('playlists.show', ['playlist' => $playlist['id']]) }}" class="playlist-name">{{ $playlist['playlist_name'] }}</a>
+                        <p class="playlist-description">{{ $playlist['playlist_description'] }}</p>
+
+                        <form action="{{ route('playlists.destroy', ['playlist' => $playlist->id ]) }}" method="POST">
+                            @method('DELETE')
+                            @csrf
+                            <button type="submit" class="btn edit-btn">Delete</button>
+                        </form>
                 </li>
             @endforeach
         @else

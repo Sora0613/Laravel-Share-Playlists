@@ -108,12 +108,27 @@ class PlaylistsController extends Controller
         $playlist = Playlist::find($id);
         $playlist->updatePlaylist($request->all(), $id);
 
-        return redirect()->route('playlists.show', $id);
+        return view('playlists.show', compact('id'));
     }
 
     public function destroy($id)
     {
-        //
-    }
+        $playlist = Playlist::find($id);
 
+        //delete songs first
+        $songs = Song::where('playlist_id', $id)->get();
+
+        if(isset($songs)) {
+            foreach ($songs as $song) {
+                $song->delete();
+            }
+        }
+
+        //delete playlist
+        $playlist->delete();
+
+        $message = 'プレイリスト、' . $playlist->playlist_name .'を削除しました。';
+
+        return back()->with('message', $message);
+    }
 }
