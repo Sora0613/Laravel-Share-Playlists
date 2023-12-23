@@ -1,40 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Songs</title>
-    <link rel="stylesheet" href="{{ asset('css/search-styles.css') }}">
+    <title>音楽検索</title>
+    <link rel="stylesheet" href="{{ asset('css/new_styles.css') }}">
 </head>
 <body>
 
-<div class="container">
-    <a href="{{ route('home') }}" class="top-link">Back to Top</a>
-    <h1>Search Songs</h1>
-    @if(session('message'))
-        <p>{{ session('message') }}</p>
-    @endif
+<!-- Search Box Section -->
+<div class="search-box-container">
+    <a href="{{ route('home') }}" class="back-to-index">Homeへ戻る</a>
+    <div class="search-box">
+        <h1>音楽検索</h1>
+        @if(session('message'))
+            <p>{{ session('message') }}</p>
+        @endif
 
-    <form id="song-form" action="{{ route('search.do') }}" method="GET">
-        @csrf
-        <label for="songs_keywords">Keyword:</label>
-        <input type="text" id="songs_keywords" name="songs_keywords" required>
+        <form action="{{ route('search.do') }}" method="GET">
+            @csrf
+            <label for="songs_keywords">検索:</label>
+            <input type="text" id="songs_keywords" name="songs_keywords" class="search-input" placeholder="アーティスト、曲名など">
+            <button class="search-btn" type="submit">検索</button>
+        </form>
 
-        <button type="submit">Search Songs</button>
-    </form>
+    </div>
+</div>
 
-    @isset($songs)
-        <div class="result-form">
+
+@isset($songs)
+    <div class="search-results-container">
+        <div class="search-results">
             <table>
                 <thead>
-                <tr>
-                    <th>Artwork</th>
-                    <th>Artist</th>
-                    <th>Song Title</th>
-                    <th>Genre</th>
-                    <th>Release Date</th>
-                    <th>Add To ...</th>
-                </tr>
+                    <tr>
+                        <th>Artwork</th>
+                        <th>Artist</th>
+                        <th>Song Title</th>
+                        <th>Genre</th>
+                        <th>Release Date</th>
+                        <th>Add To...</th>
+                    </tr>
                 </thead>
                 <tbody>
                 @foreach ($songs as $song)
@@ -46,28 +52,32 @@
                         <td>{{ $song['releaseDate'] }}</td>
                         @isset($playlists)
                             <td>
-                                <form action="{{ route('songs.store') }}" method="POST">
-                                    @csrf
-                                    <label for="Playlists">Playlists</label>
-                                    <input type="hidden" name="song" value="{{ base64_encode(json_encode($song)) }}">
-                                    <select name="playlist" id="playlist">
-                                        @foreach($playlists as $playlist)
-                                            <option value="{{ $playlist->id }}"> {{ $playlist->playlist_name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <br>
-                                    <br>
-                                    <button type="submit">Add</button>
-                                </form>
+                                <div class="add-to-container">
+                                    <form action="{{ route('songs.store') }}" method="POST">
+                                        @csrf
+                                        <label for="Playlists">Playlists</label>
+                                        <input type="hidden" name="song" value="{{ base64_encode(json_encode($song)) }}">
+                                        <select class="playlist-dropdown" name="playlist" id="playlist">
+                                            @foreach($playlists as $playlist)
+                                                <option value="{{ $playlist->id }}"> {{ $playlist->playlist_name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <br>
+                                        <br>
+                                        <button class="add-to-btn" type="submit">Add To</button>
+                                    </form>
+                                </div>
                             </td>
                         @endisset
+                        <td>
                     </tr>
                 @endforeach
                 </tbody>
             </table>
         </div>
-    @endisset
-</div>
+    </div>
+@endisset
 
 </body>
 </html>
+
