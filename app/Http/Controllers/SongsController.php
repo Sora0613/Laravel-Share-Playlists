@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Playlist;
 use App\Models\Song;
 use Illuminate\Http\Request;
 
@@ -31,8 +32,11 @@ class SongsController extends Controller
         $encodedSong = $request->input('song');
         $playlist_id = $request->playlist;
 
-        // デコード
         $song = json_decode(base64_decode($encodedSong), true);
+
+        //get playlist name from playlist_id
+        $playlist_name = Playlist::find($playlist_id)->playlist_name;
+        $song_name = $song['trackName'];
 
         Song::create([
             'song_name' => $song['trackName'],
@@ -42,7 +46,7 @@ class SongsController extends Controller
             'playlist_id' => $playlist_id,
         ]);
 
-        $message = '曲を追加しました。';
+        $message = ('【' . $playlist_name . '】に【' . $song_name . '】を追加しました。');
 
         return back()->with('message', $message);
     }
@@ -79,7 +83,7 @@ class SongsController extends Controller
         $song = Song::find($id);
         $song->delete();
 
-        $message = '曲を削除しました。';
+        $message = '【' . $song->song_name . '】をプレイリストから削除しました。';
 
         return back()->with('message', $message);
     }
