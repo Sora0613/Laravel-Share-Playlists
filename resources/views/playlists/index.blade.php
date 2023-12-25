@@ -31,7 +31,7 @@
                         <form action="{{ route('playlists.destroy', ['playlist' => $playlist->id ]) }}" method="POST">
                             @method('DELETE')
                             @csrf
-                            <button type="submit" class="btn delete-btn">Delete</button>
+                            <button type="submit" class="btn delete-btn" onclick='return confirm("本当に削除しますか？")'>Delete</button>
                         </form>
                 </li>
             @endforeach
