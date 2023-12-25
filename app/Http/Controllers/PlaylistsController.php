@@ -61,10 +61,6 @@ class PlaylistsController extends Controller
 
     public function show($id)
     {
-        /* プレイリストに登録されている曲を取得。
-        is_privateがonなら、自分のプレイリスト以外は表示しない。
-        playlistがなければ存在しない旨を返す。*/
-
         $playlist = Playlist::find($id);
 
         if($playlist === null) {

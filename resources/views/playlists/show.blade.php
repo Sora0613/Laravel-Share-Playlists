@@ -62,7 +62,7 @@
                             <form action="{{ route('songs.destroy', ['song' => $song->id ]) }}" method="POST">
                                 @method('DELETE')
                                 @csrf
-                                <button class="delete-btn" type="submit">Delete</button>
+                                <button class="delete-btn" type="submit" onclick='return confirm("本当に削除しますか？")'>Delete</button>
                             </form>
                         </td>
                     @endif
