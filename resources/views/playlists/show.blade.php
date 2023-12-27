@@ -28,7 +28,8 @@
                 <p class="playlist-description">プレイリストの作成者：{{ $playlist->getAuthorName($playlist->user_id) }}</p>
                 Share :
                 <button id="copyLinkBtn" class="copy-link-btn"><i class="fas fa-copy"></i></button>
-                <button id="copyLinkBtn" class="copy-link-btn"><i class="fa-brands fa-x-twitter"></i></button>
+                <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="今聴いてるプレイリスト" data-show-count="false" data-size="large"></a>
+                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
         </div>
         @if(isset($playlist->playlist_cover))
             <img src="{{ asset('storage/playlist_cover/' . $playlist->playlist_cover) }}" alt="Playlist Image" class="playlist-image">
