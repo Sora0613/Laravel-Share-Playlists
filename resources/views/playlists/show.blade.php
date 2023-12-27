@@ -25,7 +25,7 @@
                 @else
                     <p class="playlist-description">プレイリストの状態：公開</p>
                 @endif
-                <p class="playlist-description">プレイリストの作成者：{{ $playlist->getName($playlist->user_id) }}</p>
+                <p class="playlist-description">プレイリストの作成者：{{ $playlist->getAuthorName($playlist->user_id) }}</p>
                 Share :
                 <button id="copyLinkBtn" class="copy-link-btn"><i class="fas fa-copy"></i></button>
                 <button id="copyLinkBtn" class="copy-link-btn"><i class="fa-brands fa-x-twitter"></i></button>

@@ -46,7 +46,7 @@ class Playlist extends Model
         }
     }
 
-    public function getName($user_id)
+    public function getAuthorName($user_id)
     {
         return User::find($user_id)->name;
     }
