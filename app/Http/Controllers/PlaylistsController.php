@@ -101,10 +101,11 @@ class PlaylistsController extends Controller
             'playlist_cover' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
+        $songs = Song::find($id);
         $playlist = Playlist::find($id);
         $playlist->updatePlaylist($request->all(), $id);
 
-        return view('playlists.show', compact('id'));
+        return redirect()->route('playlists.show', compact('playlist', 'songs'));
     }
 
     public function destroy($id)

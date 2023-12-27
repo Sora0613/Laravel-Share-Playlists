@@ -27,21 +27,27 @@ class Playlist extends Model
 
         $is_private = $params['is_private'] ?? false;
 
-        //is_privateのみ変更された場合でも保存するようにしたい。
-
         $updateData = [
             'playlist_name' => $params['playlist_name'] ?? $playlist->playlist_name,
             'playlist_description' => $params['playlist_description'] ?? $playlist->playlist_description,
             'is_private' => $is_private,
         ];
 
-        if (isset($params['playlist_cover'])) {
-            $file_name = $params['playlist_cover']->store('public/playlist_cover/');
-            $updateData['playlist_cover'] = basename($file_name);
+        if ($params['playlist_name'] !== $playlist->playlist_name ||
+            $params['playlist_description'] !== $playlist->playlist_description ||
+            $is_private !== $playlist->is_private) {
+
+            if (isset($params['playlist_cover'])) {
+                $file_name = $params['playlist_cover']->store('public/playlist_cover/');
+                $updateData['playlist_cover'] = basename($file_name);
+            }
+
+            $playlist->update($updateData);
         }
+    }
 
-        $playlist->update($updateData);
-
-        return;
+    public function getAuthorName($user_id)
+    {
+        return User::find($user_id)->name;
     }
 }
