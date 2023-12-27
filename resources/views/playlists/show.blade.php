@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>プレイリスト詳細</title>
     <link rel="stylesheet" href="{{ asset('css/new_styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> <!-- Font Awesome -->
 </head>
 <body>
 
@@ -24,6 +25,10 @@
                 @else
                     <p class="playlist-description">プレイリストの状態：公開</p>
                 @endif
+                <p class="playlist-description">プレイリストの作成者：{{ $playlist->getName($playlist->user_id) }}</p>
+                Share :
+                <button id="copyLinkBtn" class="copy-link-btn"><i class="fas fa-copy"></i></button>
+                <button id="copyLinkBtn" class="copy-link-btn"><i class="fa-brands fa-x-twitter"></i></button>
         </div>
         @if(isset($playlist->playlist_cover))
             <img src="{{ asset('storage/playlist_cover/' . $playlist->playlist_cover) }}" alt="Playlist Image" class="playlist-image">
@@ -74,6 +79,19 @@
             @endisset
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var copyLinkBtn = document.getElementById('copyLinkBtn');
 
+        copyLinkBtn.addEventListener('click', function() {
+            var playlistLink = window.location.href;
+            navigator.clipboard.writeText(playlistLink).then(function() {
+                alert('リンクがコピーされました: ' + playlistLink);
+            }).catch(function(err) {
+                console.error('リンクのコピー中にエラーが発生しました: ', err);
+            });
+        });
+    });
+</script>
 </body>
 </html>
